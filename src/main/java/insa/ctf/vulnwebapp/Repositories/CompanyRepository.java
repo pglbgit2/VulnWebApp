@@ -1,4 +1,7 @@
 package insa.ctf.vulnwebapp.Repositories;
 
-public interface CompanyRepository {
+import insa.ctf.vulnwebapp.Entities.CompanyEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CompanyRepository extends JpaRepository<CompanyEntity, Long> {
 }
