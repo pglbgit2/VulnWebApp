@@ -29,6 +29,10 @@ public class AppUserEntity {
     @OneToMany(mappedBy="author")
     private List<TicketCommentEntity> comments;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role;
+
     @ManyToOne
     private AppUserEntity supervisor;
 
