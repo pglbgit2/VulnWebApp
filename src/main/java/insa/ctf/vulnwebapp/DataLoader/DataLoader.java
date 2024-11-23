@@ -5,6 +5,11 @@ import insa.ctf.vulnwebapp.Repositories.AppUserRepository;
 import insa.ctf.vulnwebapp.Repositories.CompanyRepository;
 import insa.ctf.vulnwebapp.Repositories.TicketCommentRepository;
 import insa.ctf.vulnwebapp.Repositories.TicketRepository;
+import insa.ctf.vulnwebapp.Service.CommentService;
+import insa.ctf.vulnwebapp.Service.CompanyService;
+import insa.ctf.vulnwebapp.Service.TicketService;
+import insa.ctf.vulnwebapp.Service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -13,17 +18,14 @@ import java.util.List;
 
 @Component
 public class DataLoader implements CommandLineRunner {
-    private final AppUserRepository appUserRepository;
-    private final CompanyRepository companyRepository;
-    private final TicketRepository  ticketRepository;
-    private final TicketCommentRepository ticketCommentRepository;
-
-    public DataLoader(AppUserRepository appUserRepository, CompanyRepository companyRepository, TicketRepository ticketRepository, TicketCommentRepository ticketCommentRepository) {
-        this.appUserRepository = appUserRepository;
-        this.companyRepository = companyRepository;
-        this.ticketRepository = ticketRepository;
-        this.ticketCommentRepository = ticketCommentRepository;
-    }
+    @Autowired
+    CommentService  commentService;
+    @Autowired
+    TicketService ticketService;
+    @Autowired
+    UserService userService;
+    @Autowired
+    CompanyService companyService;
 
     //INSERT IGNORE INTO company_entity (id_company, company_name)
     //VALUES(1,'Anneau&Co');
@@ -45,49 +47,13 @@ public class DataLoader implements CommandLineRunner {
     //VALUES (2, 1, 1, "skill issue");
 
 
-    public CompanyEntity addCompanyIfNotExists(String companyName) {
-        CompanyEntity company = this.companyRepository.findByCompanyNameEqualsIgnoreCase(companyName);
-        if (company == null) {
-            company = new CompanyEntity();
-            company.setCompanyName(companyName);
-            this.companyRepository.save(company);
-        }
-        return company;
-    }
 
-    public AppUserEntity addUserIfNotExists(String userName, String password, CompanyEntity company, UserRole role, AppUserEntity supervisor) {
-        AppUserEntity appUser = this.appUserRepository.findByUsername(userName);
-        if (appUser == null) {
-            appUser = new AppUserEntity();
-            appUser.setUsername(userName);
-            appUser.setPassword(password);
-            appUser.setRole(role);
-            appUser.setCompany(company);
-            if(supervisor != null && supervisor.getRole() == UserRole.supervisor) {
-                appUser.setSupervisor(supervisor);
-            }
-            this.appUserRepository.save(appUser);
-        }
-        return appUser;
-    }
 
-    public TicketCommentEntity addComment(AppUserEntity creator, String content, TicketEntity ticket){
-        TicketCommentEntity ticketComment = new TicketCommentEntity();
-        ticketComment.setContent(content);
-        ticketComment.setTicket(ticket);
-        ticketComment.setAuthor(creator);
-        this.ticketCommentRepository.save(ticketComment);
-        return ticketComment;
-    }
 
-    public TicketEntity addTicket(String title, String problem, AppUserEntity creator){
-        TicketEntity ticketEntity = new TicketEntity();
-        ticketEntity.setTitle(title);
-        ticketEntity.setDescription(problem);
-        ticketEntity.setCreator(creator);
-        this.ticketRepository.save(ticketEntity);
-        return ticketEntity;
-    }
+
+
+
+
 
 
 
@@ -95,16 +61,16 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        CompanyEntity ringco = this.addCompanyIfNotExists("Anneau&Co");
-        CompanyEntity nazgulcorp = this.addCompanyIfNotExists("NazgulCorp");
+        CompanyEntity ringco = this.companyService.addCompanyIfNotExists("Anneau&Co");
+        CompanyEntity nazgulcorp = this.companyService.addCompanyIfNotExists("NazgulCorp");
 
-        AppUserEntity aragorn = this.addUserIfNotExists("aragorn", "GondorSecretKing", ringco, UserRole.supervisor, null);
-        AppUserEntity gimli = this.addUserIfNotExists("gimli", "m1thril!", ringco, UserRole.user, aragorn);
-        AppUserEntity legolas = this.addUserIfNotExists("legolas", "WHAT_DO_YOUR_ELF_EYES_SEE?", ringco, UserRole.user, aragorn);
+        AppUserEntity aragorn = this.userService.addUserIfNotExists("aragorn", "GondorSecretKing", ringco, UserRole.supervisor, null);
+        AppUserEntity gimli = this.userService.addUserIfNotExists("gimli", "m1thril!", ringco, UserRole.user, aragorn);
+        AppUserEntity legolas = this.userService.addUserIfNotExists("legolas", "WHAT_DO_YOUR_ELF_EYES_SEE?", ringco, UserRole.user, aragorn);
 
 
-        TicketEntity ticket1 = this.addTicket("Update problem", "The save option don't change anything", gimli);
-        TicketCommentEntity comment1 = this.addComment(legolas, "Skill issue", ticket1);
+        TicketEntity ticket1 = this.ticketService.addTicket("Update problem", "The save option don't change anything", gimli);
+        TicketCommentEntity comment1 = this.commentService.addComment(legolas, "Skill issue", ticket1);
 
     }
 }
