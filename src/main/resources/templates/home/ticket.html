@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="ticketDetail(ticket)">
+    <ticketDetail>
+        <div>
+            <h4><b>Ticket:</b> <a th:text="${ticket.getTitle()}" th:href="'/tickets/'+${ticket.getId()}"></a></h4>
+        </div>
+        <div>
+            <p><b>Author</b> <a th:text="${ticket.getCreatorName()}" th:href="'/profil/'+${ticket.getIdCreator()}"></a></p>
+        </div>
+    </ticketDetail>
+</div>
+
+</body>
+</html>

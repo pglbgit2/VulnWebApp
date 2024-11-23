@@ -14,6 +14,7 @@ public class TicketCommentEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
     private Long idComment;
 
+    @Column(name="content")
     private String content;
 
     @ManyToOne

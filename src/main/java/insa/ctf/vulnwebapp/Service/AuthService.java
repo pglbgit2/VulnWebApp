@@ -30,8 +30,7 @@ public class AuthService {
         Optional<AppUserEntity> target = userRepository.findById(targetId);
         if(target.isPresent()){
             if(user.getRole() == UserRole.supervisor || user.getRole() == UserRole.user) {
-                return false;
-                //return user.getCompany().getName().equals(target.get().getCompany().getName());
+                return user.getCompany().getCompanyName().equals(target.get().getCompany().getCompanyName());
             }
             return user.getRole() == UserRole.administrator || user.getRole() == UserRole.technician;
         } else {

@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -34,6 +35,12 @@ public class ExceptionController {
 
     @ExceptionHandler(HttpClientErrorException.Forbidden.class)
     public ModelAndView handleAccessDenied(HttpServletRequest request, Exception e)   {
+        Logger.getLogger(getClass().getName()).log(Level.WARNING, "Request: " + request.getRequestURL() + " raised " + e);
+        return new ModelAndView("errors/error-403");
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ModelAndView handleResponseStatus(HttpServletRequest request, Exception e)   {
         Logger.getLogger(getClass().getName()).log(Level.WARNING, "Request: " + request.getRequestURL() + " raised " + e);
         return new ModelAndView("errors/error-403");
     }

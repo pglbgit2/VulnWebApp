@@ -1,6 +1,7 @@
 package insa.ctf.vulnwebapp.Entities;
 
 
+import insa.ctf.vulnwebapp.Dtos.UserDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,9 +19,10 @@ public class AppUserEntity {
     @Setter(AccessLevel.NONE) @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, name="username")
     private String username;
 
+    @Column(name="password")
     private String password;
 
     @OneToMany(mappedBy="creator")
@@ -30,14 +32,14 @@ public class AppUserEntity {
     private List<TicketCommentEntity> comments;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, name="role")
     private UserRole role;
 
     @ManyToOne
     private AppUserEntity supervisor;
 
     @OneToMany(mappedBy = "supervisor")
-    private List<AppUserEntity> supervisors;
+    private List<AppUserEntity> subordinates;
 
     @ManyToOne
     private CompanyEntity company;

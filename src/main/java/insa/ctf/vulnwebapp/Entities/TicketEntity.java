@@ -18,8 +18,10 @@ public class TicketEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idTicket;
 
+    @Column(name="title")
     private String title;
 
+    @Column(name="description")
     private String description;
 
     @ElementCollection
