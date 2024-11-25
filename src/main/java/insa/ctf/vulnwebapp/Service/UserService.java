@@ -3,11 +3,15 @@ package insa.ctf.vulnwebapp.Service;
 import insa.ctf.vulnwebapp.Dtos.UserDto;
 import insa.ctf.vulnwebapp.Entities.AppUserEntity;
 import insa.ctf.vulnwebapp.Entities.CompanyEntity;
+import insa.ctf.vulnwebapp.Entities.TicketCommentEntity;
 import insa.ctf.vulnwebapp.Entities.UserRole;
 import insa.ctf.vulnwebapp.Repositories.AppUserRepository;
 import insa.ctf.vulnwebapp.Repositories.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -26,16 +30,26 @@ public class UserService {
     }
 
     public UserDto toDto(Long personId, String current) {
+        System.out.println("debug debug debug123");
         AppUserEntity appUserEntity = this.appUserRepository.findById(personId).orElse(null);
         if (appUserEntity == null) {
             return null;
         }
+        System.out.println("debug 145");
         if(appUserEntity.getUsername().equals(current)){
-            return new UserDto(appUserEntity, ticketRepository.getAllByComments(appUserEntity.getComments()), appUserEntity.getSupervisor());
+            List<Long> commentIds = appUserEntity.getComments()
+                    .stream()
+                    .map(TicketCommentEntity::getIdComment)
+                    .toList();
+            return new UserDto(appUserEntity, ticketRepository.getAllByCommentsIds(commentIds), appUserEntity.getSupervisor()); // ,(appUserEntity.getRole() == UserRole.supervisor)?this.appUserRepository.findAllBySupervisor_Id(appUserEntity.getId()):null
         }
         AppUserEntity currentUser = appUserRepository.findByUsername(current);
         if(currentUser.getRole() == UserRole.administrator || (currentUser.getRole() == UserRole.technician)){
-            return new UserDto(appUserEntity, ticketRepository.getAllByComments(appUserEntity.getComments()), appUserEntity.getSupervisor());
+            List<Long> commentIds = appUserEntity.getComments()
+                    .stream()
+                    .map(TicketCommentEntity::getIdComment)
+                    .toList();
+            return new UserDto(appUserEntity, ticketRepository.getAllByCommentsIds(commentIds), appUserEntity.getSupervisor());
         } else {
             return new UserDto(appUserEntity.getUsername(), appUserEntity.getId());
         }

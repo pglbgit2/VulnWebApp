@@ -22,4 +22,10 @@ public class TicketCommentEntity {
 
     @ManyToOne
     AppUserEntity author;
+
+    public TicketCommentEntity(String content, TicketEntity ticket, AppUserEntity author) {
+        this.content = content;
+        this.ticket = ticket;
+        this.author = author;
+    }
 }

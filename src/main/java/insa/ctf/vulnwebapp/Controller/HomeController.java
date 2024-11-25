@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Controller
-@RequestMapping({"/", "/home"})
+@RequestMapping({"/", "/home", ""})
 @SessionAttributes({"username"})
 public class HomeController {
 

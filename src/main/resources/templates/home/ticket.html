@@ -4,7 +4,7 @@
 <div th:fragment="ticketDetail(ticket)">
     <ticketDetail>
         <div>
-            <h4><b>Ticket:</b> <a th:text="${ticket.getTitle()}" th:href="'/tickets/'+${ticket.getId()}"></a></h4>
+            <h4><b>Ticket:</b> <a th:text="${ticket.getTitle()}" th:href="'/ticket/'+${ticket.getId()}"></a></h4>
         </div>
         <div>
             <p><b>Author</b> <a th:text="${ticket.getCreatorName()}" th:href="'/profil/'+${ticket.getIdCreator()}"></a></p>

@@ -8,7 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,20 +21,21 @@ public class UserDto {
     private String username;
     private String password;
     private UserRole role;
-    private List<TicketDto> relatedTickets;
+    private Set<TicketDto> relatedTickets;
     private String supervisorName;
     private Long supervisorId;
     private List<UserDto> subordinates;
 
 
     public UserDto(AppUserEntity user, List<TicketEntity> allByComments, AppUserEntity supervisor) {
+        System.out.println("debug in constructor");
         this.id = user.getId();
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.role = user.getRole();
-        this.relatedTickets = new ArrayList<>();
-        this.relatedTickets.addAll(TicketDto.toTicketDtos(user.getTickets(), false));
-        this.relatedTickets.addAll(TicketDto.toTicketDtos(allByComments, false));
+        this.relatedTickets = new HashSet<>();
+        this.relatedTickets.addAll(TicketDto.toTicketsDtos(user.getTickets(), false));
+        this.relatedTickets.addAll(TicketDto.toTicketsDtos(allByComments, false));
         if(supervisor != null) {
             this.supervisorName = supervisor.getUsername();
             this.supervisorId = supervisor.getId();
@@ -42,6 +45,7 @@ public class UserDto {
         }
         List<AppUserEntity> subordinates = user.getSubordinates();
         if(subordinates != null && !subordinates.isEmpty()) {
+            this.subordinates = new ArrayList<>();
             for(AppUserEntity subordinate : subordinates) {
                 this.subordinates.add(new UserDto(subordinate.getUsername(), subordinate.getId()));
             }

@@ -67,10 +67,11 @@ public class DataLoader implements CommandLineRunner {
         AppUserEntity aragorn = this.userService.addUserIfNotExists("aragorn", "GondorSecretKing", ringco, UserRole.supervisor, null);
         AppUserEntity gimli = this.userService.addUserIfNotExists("gimli", "m1thril!", ringco, UserRole.user, aragorn);
         AppUserEntity legolas = this.userService.addUserIfNotExists("legolas", "WHAT_DO_YOUR_ELF_EYES_SEE?", ringco, UserRole.user, aragorn);
+        aragorn.setSubordinates(Arrays.asList(legolas, gimli));
 
-
-        TicketEntity ticket1 = this.ticketService.addTicket("Update problem", "The save option don't change anything", gimli);
-        TicketCommentEntity comment1 = this.commentService.addComment(legolas, "Skill issue", ticket1);
-
+        TicketEntity ticket1 = this.ticketService.addTicketIfNotExists("Update problem", "The save option don't change anything", gimli);
+        if(ticket1 != null) {
+            TicketCommentEntity comment1 = this.commentService.addComment(legolas, "Skill issue", ticket1);
+        }
     }
 }
