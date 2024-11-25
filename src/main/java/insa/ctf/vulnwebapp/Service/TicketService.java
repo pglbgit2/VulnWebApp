@@ -2,15 +2,15 @@ package insa.ctf.vulnwebapp.Service;
 
 import insa.ctf.vulnwebapp.Dtos.CommentsDto;
 import insa.ctf.vulnwebapp.Dtos.TicketDto;
-import insa.ctf.vulnwebapp.Entities.AppUserEntity;
-import insa.ctf.vulnwebapp.Entities.CompanyEntity;
-import insa.ctf.vulnwebapp.Entities.TicketCommentEntity;
-import insa.ctf.vulnwebapp.Entities.TicketEntity;
+import insa.ctf.vulnwebapp.Entities.*;
 import insa.ctf.vulnwebapp.Repositories.AppUserRepository;
 import insa.ctf.vulnwebapp.Repositories.TicketRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +33,7 @@ public class TicketService {
     }
 
     public List<TicketEntity> getAllTicketsFromSameCompany(CompanyEntity company) {
-        return ticketRepository.findAllByCreator_Company(company);
+        return this.ticketRepository.findAllByCreator_Company(company);
     }
 
     public TicketEntity addTicket(String title, String problem, AppUserEntity creator){
@@ -63,5 +63,21 @@ public class TicketService {
             return this.addTicket(title, description, gimli);
         }
         return null;
+    }
+
+    public List<String> getFilesOfTicket(Long ticketId) {
+        Optional<TicketEntity> ticketsOpt =  this.ticketRepository.findById(ticketId);
+        if(ticketsOpt.isPresent()) {
+           return ticketsOpt.get().getFilenames();
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    @Transactional
+    public void addFileToTicket(Long ticketId, String fileName) {
+        Optional<TicketEntity> ticketsOpt =  this.ticketRepository.findById(ticketId);
+        System.out.println("in addFile");
+        ticketsOpt.ifPresent(ticketEntity -> {ticketEntity.getFilenames().add(fileName); System.out.println("AJOUT FICHIER");});
     }
 }

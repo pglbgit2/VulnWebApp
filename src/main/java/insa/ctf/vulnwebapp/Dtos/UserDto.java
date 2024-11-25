@@ -28,7 +28,6 @@ public class UserDto {
 
 
     public UserDto(AppUserEntity user, List<TicketEntity> allByComments, AppUserEntity supervisor) {
-        System.out.println("debug in constructor");
         this.id = user.getId();
         this.username = user.getUsername();
         this.password = user.getPassword();

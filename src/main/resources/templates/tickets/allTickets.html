@@ -9,15 +9,28 @@
 <body>
 <div th:insert="~{common/header.html :: header}"></div>
 
-<tr th:each="ticketDto : ${tickets}">
-
-    <div>
-        <h4><b>Ticket:</b> <a th:text="${ticketDto.getTitle()}" th:href="'/ticket/'+${ticketDto.getId()}"></a></h4>
+<div class="container my-5">
+    <h1 class="text-center mb-4">Ticket List</h1>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <tr th:each="ticketDto : ${tickets}">
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <b>Ticket:</b>
+                            <a th:text="${ticketDto.getTitle()}"
+                               th:href="'/ticket/'+${ticketDto.getId()}"></a>
+                        </h5>
+                        <p class="card-text">
+                            <b>Author:</b>
+                            <a th:text="${ticketDto.getCreatorName()}"
+                               th:href="'/profil/'+${ticketDto.getIdCreator()}"></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </tr>
     </div>
-    <div>
-        <p><b>Author</b> <a th:text="${ticketDto.getCreatorName()}" th:href="'/profil/'+${ticketDto.getIdCreator()}"></a></p>
-    </div>
-
-</tr>
+</div>
 </body>
 </html>

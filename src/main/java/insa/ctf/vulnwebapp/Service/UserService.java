@@ -30,12 +30,10 @@ public class UserService {
     }
 
     public UserDto toDto(Long personId, String current) {
-        System.out.println("debug debug debug123");
         AppUserEntity appUserEntity = this.appUserRepository.findById(personId).orElse(null);
         if (appUserEntity == null) {
             return null;
         }
-        System.out.println("debug 145");
         if(appUserEntity.getUsername().equals(current)){
             List<Long> commentIds = appUserEntity.getComments()
                     .stream()
